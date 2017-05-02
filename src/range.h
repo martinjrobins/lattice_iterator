@@ -37,27 +37,27 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace lattice {
 
-template <typename IteratorType>
+template <typename IteratorType1, typename IteratorType2>
 struct iterator_range{
-    typedef IteratorType iterator;
-    IteratorType m_begin;
-    IteratorType m_end;
+    IteratorType1 m_begin;
+    IteratorType2 m_end;
 
     iterator_range()
     {}
 
-    iterator_range(const IteratorType& begin, const IteratorType& end):
+    iterator_range(const IteratorType1& begin, const IteratorType1& end):
         m_begin(begin),m_end(end)
     {}
-    const IteratorType &begin() const { return m_begin; }
-    const IteratorType &end() const { return m_end; }
-    IteratorType &begin() { return m_begin; }
-    IteratorType &end() { return m_end; }
+    const IteratorType1 &begin() const { return m_begin; }
+    const IteratorType2 &end() const { return m_end; }
+    IteratorType1 &begin() { return m_begin; }
+    IteratorType2 &end() { return m_end; }
+    size_t size() const { return std::distance(m_begin,m_end); }
 };
 
-template <typename IteratorType>
-iterator_range<IteratorType> make_iterator_range(IteratorType&& begin, IteratorType&& end) {
-    return iterator_range<IteratorType>(begin,end);
+template <typename IteratorType1, typename IteratorType2>
+iterator_range<IteratorType1, IteratorType2> make_iterator_range(IteratorType1&& begin, IteratorType2&& end) {
+    return iterator_range<IteratorType1, IteratorType2>(begin,end);
 }
 
 }

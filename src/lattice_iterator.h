@@ -38,6 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <array>
 #include <cmath>
 #include <cassert>
+#include <ostream>
 
 namespace lattice {
 
@@ -52,6 +53,7 @@ class lattice_iterator {
     int_d m_max;
     int_d m_index;
     int_d m_size;
+    bool m_valid;
 public:
     typedef const int_d pointer;
 	typedef std::random_access_iterator_tag iterator_category;
@@ -59,18 +61,22 @@ public:
     typedef const int_d value_type;
 	typedef std::ptrdiff_t difference_type;
 
-    lattice_iterator()
+    lattice_iterator():
+        m_valid(false)
     {}
 
     lattice_iterator(const int_d &min, 
-                     const int_d &max, 
-                     const int_d &start):
+                     const int_d &max):
         m_min(min),
         m_max(max),
-        m_index(start),
-        m_size(minus(max,min))
+        m_index(min),
+        m_size(minus(max,min)),
+        m_valid(true)
     {}
 
+    explicit operator size_t() const {
+        return collapse_index_vector(m_index);
+    }
 
     reference operator *() const {
         return dereference();
@@ -113,8 +119,16 @@ public:
         return tmp;
     }
 
-    size_t operator-(iterator start) const {
-        const int distance = collapse_index_vector(minus(m_index,start.m_index));
+    size_t operator-(const iterator& start) const {
+        int distance;
+        if (!m_valid) {
+            const int_d test = minus(minus(start.m_max,1),start.m_index);
+            distance = start.collapse_index_vector(minus(minus(start.m_max,1),start.m_index))+1;
+        } else if (!start.m_valid) {
+            distance = collapse_index_vector(minus(m_index,m_min));
+        } else {
+            distance = collapse_index_vector(minus(m_index,start.m_index));
+        }
         assert(distance > 0);
         return distance;
     }
@@ -123,7 +137,15 @@ public:
         return equal(rhs);
     }
 
+    inline bool operator==(const bool rhs) const {
+        return equal(rhs);
+    }
+
     inline bool operator!=(const iterator& rhs) const {
+        return !operator==(rhs);
+    }
+
+    inline bool operator!=(const bool rhs) const {
         return !operator==(rhs);
     }
 
@@ -134,6 +156,15 @@ private:
         int_d ret;
         for (size_t i = 0; i < D; ++i) {
             ret[i] = arg1[i]-arg2[i];
+        }
+        return ret;
+    }
+
+    static inline 
+    int_d minus(const int_d& arg1, const int arg2) {
+        int_d ret;
+        for (size_t i = 0; i < D; ++i) {
+            ret[i] = arg1[i]-arg2;
         }
         return ret;
     }
@@ -153,7 +184,7 @@ private:
     int_d reassemble_index_vector(const int index) const {
         int_d vindex;
         int i = index;
-        for (size_t d = 0; d<D; --d) {
+        for (size_t d = 0; d<D; ++d) {
             double div = (double)i / m_size[d];
             vindex[d] = std::round((div-std::floor(div)) * m_size[d]);
             i = std::floor(div);
@@ -162,12 +193,18 @@ private:
     }
 
     bool equal(iterator const& other) const {
+        if (!other.m_valid) return !m_valid;
+        if (!m_valid) return !other.m_valid;
         for (size_t i = 0; i < D; ++i) {
            if (m_index[i] != other.m_index[i]) {
                return false;
            }
         }
         return true;
+    }
+
+    bool equal(const bool other) const {
+        return m_valid==other;
     }
 
     reference dereference() const { 
@@ -180,7 +217,9 @@ private:
             if (m_index[i] < m_max[i]) break;
             if (i != D-1) {
                 m_index[i] = m_min[i];
-            } 
+            } else {
+                m_valid = false;
+            }
         }
     }
 
