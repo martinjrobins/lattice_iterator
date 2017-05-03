@@ -44,7 +44,7 @@ constructor for the iterator;
 
 ```cpp
 lattice_iterator<2> it( {{0,0}}, {{m,n}} );
-lattice_iterator<2> it_end();
+lattice_iterator<2> it_end;
 for(; it != it_end; ++it) {
     do_something(*it[0],*it[1]);
 }
