@@ -22,18 +22,30 @@ for(int j=0; j<n; ++j) {
 This is all well and good, except if you don't know what dimension you wish to 
 iterate over, or if you want to write some generic code that is independent of 
 the dimension. In this case you would like to use some sort of iterator or 
-generating function. This library provides such an iterator. The lattice 
-iterator is full defined in `src/lattice_iterator.h`, and can be compiled by a 
-suitable C++11 compiler. Note that the iterator implements a comparison with a 
-`bool` type to judge whether the given range is exhausted, so is more suitable 
-for C++17 projects where ranges can have `begin` and `end` iterators of 
-differing type.
+generating function. This library provides such an iterator. 
+
+The lattice iterator is full defined in `src/lattice_iterator.h`, and can be 
+compiled by a suitable C++11 compiler. Note that the iterator implements a 
+comparison with a `bool` type to judge whether the given range is exhausted, so 
+is suitable for C++17 projects where ranges can have `begin` and `end` iterators 
+of differing type.
 
 As an example of use, we can re-implement the above 2D loop as
 
 ```cpp
 lattice_iterator<2> it( {{0,0}}, {{m,n}} );
 for(; it != false; ++it) {
+    do_something(*it[0],*it[1]);
+}
+```
+
+If you wish to use an `end` iterator of identical type, use the empty 
+constructor for the iterator;
+
+```cpp
+lattice_iterator<2> it( {{0,0}}, {{m,n}} );
+lattice_iterator<2> it_end();
+for(; it != it_end; ++it) {
     do_something(*it[0],*it[1]);
 }
 ```
