@@ -35,6 +35,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef RANGE_H_ 
 #define RANGE_H_ 
 
+#include <utility>
+#include <iterator>
+
 namespace lattice {
 
 template <typename IteratorType1, typename IteratorType2>
@@ -45,19 +48,41 @@ struct iterator_range{
     iterator_range()
     {}
 
-    iterator_range(const IteratorType1& begin, const IteratorType1& end):
-        m_begin(begin),m_end(end)
+    iterator_range(IteratorType1&& begin, IteratorType2&& end):
+        m_begin(std::forward<IteratorType1>(begin)),m_end(std::forward<IteratorType2>(end))
     {}
+
     const IteratorType1 &begin() const { return m_begin; }
     const IteratorType2 &end() const { return m_end; }
     IteratorType1 &begin() { return m_begin; }
     IteratorType2 &end() { return m_end; }
-    size_t size() const { return std::distance(m_begin,m_end); }
+    size_t size() const { return m_end - m_begin; }
+};
+
+template <typename IteratorType1>
+struct iterator_range<IteratorType1,bool> {
+    IteratorType1 m_begin;
+    typedef bool IteratorType2;
+    IteratorType2 m_end;
+
+    iterator_range()
+    {}
+
+    iterator_range(IteratorType1&& begin, IteratorType2&& end):
+        m_begin(std::forward<IteratorType1>(begin)),m_end(std::forward<IteratorType2>(end))
+    {}
+
+    const IteratorType1 &begin() const { return m_begin; }
+    const IteratorType2 &end() const { return m_end; }
+    IteratorType1 &begin() { return m_begin; }
+    IteratorType2 &end() { return m_end; }
+    size_t size() const { return IteratorType1() - m_begin; }
 };
 
 template <typename IteratorType1, typename IteratorType2>
 iterator_range<IteratorType1, IteratorType2> make_iterator_range(IteratorType1&& begin, IteratorType2&& end) {
-    return iterator_range<IteratorType1, IteratorType2>(begin,end);
+    return iterator_range<IteratorType1, IteratorType2>(std::forward<IteratorType1>(begin),
+                                                        std::forward<IteratorType2>(end));
 }
 
 }
