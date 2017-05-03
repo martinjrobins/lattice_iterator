@@ -39,8 +39,8 @@ for(; it != false; ++it) {
 }
 ```
 
-If you wish to use an `end` iterator of identical type, use the empty 
-constructor for the iterator;
+If you wish to use an `end` iterator of identical type, simply use the empty 
+constructor for the iterator.
 
 ```cpp
 lattice_iterator<2> it( {{0,0}}, {{m,n}} );
