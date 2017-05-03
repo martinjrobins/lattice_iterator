@@ -9,12 +9,12 @@ for(int i=0; i<n; ++i) {
 }
 ```
 
-And this is the 2D version, where we iterate from `(0,0)` to `(n-1,m-1)`
+And this is the 2D version, where we iterate from `(0,0)` to `(m-1,n-1)`
 
 ```cpp
-for(int i=0; i<n; ++i) {
-    for(int j=0; j<m; ++j) {
-        do_something(j,i);
+for(int j=0; j<n; ++j) {
+    for(int i=0; i<m; ++i) {
+        do_something(i,j);
     }
 }
 ```
@@ -27,7 +27,7 @@ generating function. This library provides such an iterator.
 As an example of use, we can re-implement the above 2D loop as
 
 ```cpp
-lattice_iterator<2> it({{0,0}},{{m,n}});
+lattice_iterator<2> it( {{0,0}}, {{m,n}} );
 for(; it != false; ++it) {
     do_something(*it[0],*it[1]);
 }
