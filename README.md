@@ -1,4 +1,4 @@
-# An C++ N-dimensional lattice iterator
+# A N-dimensional lattice iterator for C++ 
 
 Iterating over a set of 1D or 2D consecutive indicies is a common operation, for 
 example, the following loop iterates over the values from `0` to `n-1`
