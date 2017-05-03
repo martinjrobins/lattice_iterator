@@ -101,21 +101,46 @@ TEST_CASE( "finite difference") {
     const unsigned int D = 2;
     const size_t m = 10;
     const size_t n = 11;
-    const std::array<int,D> min = {{0,0}};
-    const std::array<int,D> max = {{n,m}};
+    const size_t order = 5;
 
-    auto outer_range = make_iterator_range(
+    const std::array<int,D> min = {{0,0}};
+    const std::array<int,D> max = {{n+2*order,m+2*order}};
+    const std::array<int,D> min_domain = {{order,order}};
+    const std::array<int,D> max_domain = {{n+order,m+order}};
+    const std::array<int,D> max_left = {{order,m+2*order}};
+    const std::array<int,D> min_right = {{n+order+1,0}};
+
+    auto all = make_iterator_range(
                         lattice_iterator<D>(min,max),
                         false);
-
-    auto inner_range = make_iterator_range(
-                        lattice_iterator<D>({{-1,-1}},{{1,1}}),
+    auto domain = make_iterator_range(
+                        lattice_iterator<D>(min_domain,max_domain),
+                        false);
+    auto left_boundary = make_iterator_range(
+                        lattice_iterator<D>(min,max_left),
+                        false);
+    auto right_boundary = make_iterator_range(
+                        lattice_iterator<D>(min_right,max),
                         false);
 
-    std::vector<double> values(outer_range.size());
+    std::vector<double> values(all.size(),0.0);
 
-    for(auto outer_index&: range) {
-        for(auto inner_index&: inner_range) {
+    for(auto it=left_boundary.begin(); it!=left_boundary.end(); ++it) {
+        values[static_cast<size_t>(it)] = 1.0;
+    }
+    for(auto it=right_boundary.begin(); it!=right_boundary.end(); ++it) {
+        values[static_cast<size_t>(it)] = 1.0;
+    }
+
+    for (int i = 0; i < 100; ++i) {
+        for(auto it=domain.begin(); it!=domain.end(); ++it) {
+            for (unsigned int d = 0; d < D; d++) {
+                for (size_t j = 0; j < order; j++) {
+                    
+                } 
+            }
+        }
+    }
 
 
     
