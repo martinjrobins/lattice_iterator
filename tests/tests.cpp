@@ -136,6 +136,7 @@ TEST_CASE( "finite difference") {
     const int_d max_left = {{order/2,m+order}};
     const int_d min_right = {{n+order/2,0}};
 
+#if __cplusplus > 201402L
     auto all = make_iterator_range(
                         lattice_iterator<D>(min,max),
                         false);
@@ -148,6 +149,21 @@ TEST_CASE( "finite difference") {
     auto right_boundary = make_iterator_range(
                         lattice_iterator<D>(min_right,max),
                         false);
+#else
+    auto all = make_iterator_range(
+                        lattice_iterator<D>(min,max),
+                        lattice_iterator<D>());
+    auto domain = make_iterator_range(
+                        lattice_iterator<D>(min_domain,max_domain),
+                        lattice_iterator<D>());
+    auto left_boundary = make_iterator_range(
+                        lattice_iterator<D>(min,max_left),
+                        lattice_iterator<D>());
+    auto right_boundary = make_iterator_range(
+                        lattice_iterator<D>(min_right,max),
+                        lattice_iterator<D>());
+#endif
+
 
     std::vector<double> values0(all.size(),0.0);
     std::vector<double> values1(all.size(),0.0);

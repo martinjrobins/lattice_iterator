@@ -1,5 +1,7 @@
 # A N-dimensional lattice iterator for C++ 
 
+[![TravisCI](https://travis-ci.org/martinjrobins/lattice_iterator.svg?branch=master)](https://travis-ci.org/martinjrobins/lattice_iterator)
+
 ## Quick Start
 
 Iterating over a set of 1D or 2D consecutive indicies is a common operation, for 
