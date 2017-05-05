@@ -1,5 +1,7 @@
 # A N-dimensional lattice iterator for C++ 
 
+## Quick Start
+
 Iterating over a set of 1D or 2D consecutive indicies is a common operation, for 
 example, the following loop iterates over the values from `0` to `n-1`
 
@@ -9,12 +11,12 @@ for(int i=0; i<n; ++i) {
 }
 ```
 
-And this is the 2D version, where we iterate from `(0,0)` to `(m-1,n-1)`
+And this is a 2D version, where we iterate from `(0,0)` to `(n-1,m-1)`
 
 ```cpp
-for(int j=0; j<n; ++j) {
-    for(int i=0; i<m; ++i) {
-        do_something(i,j);
+for(int i=0; i<n; ++i) {
+    for(int j=0; j<m; ++j) {
+        do_something( {{i,j}} );
     }
 }
 ```
@@ -33,9 +35,9 @@ of differing type.
 As an example of use, we can re-implement the above 2D loop as
 
 ```cpp
-lattice_iterator<2> it( {{0,0}}, {{m,n}} );
+lattice_iterator<2> it( {{0,0}}, {{n,m}} );
 for(; it != false; ++it) {
-    do_something(*it[0],*it[1]);
+    do_something(*it);
 }
 ```
 
@@ -43,17 +45,19 @@ If you wish to use an `end` iterator of identical type, simply use the empty
 constructor for the iterator.
 
 ```cpp
-lattice_iterator<2> it( {{0,0}}, {{m,n}} );
+lattice_iterator<2> it( {{0,0}}, {{n,m}} );
 lattice_iterator<2> it_end;
 for(; it != it_end; ++it) {
     do_something(*it[0],*it[1]);
 }
 ```
 
+## Extended Example
+
 This type of iterator is very useful for stencil codes, often used in computer 
 simulations (e.g. Finite Difference Method) or image processing (e.g. Gaussian 
 blur). Below is a generic stencil code that solves the 2D heat equation on an 
-`m` by `n` lattice with Dirichlet boundary conditions. The stencil order or the 
+`n` by `m` lattice with Dirichlet boundary conditions. The stencil order or the 
 number of dimensions are parameters can can be changed easily (see the `tests/` 
 sub-folder for a full code listing)
 

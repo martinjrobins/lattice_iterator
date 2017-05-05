@@ -22,8 +22,8 @@ TEST_CASE( "iterators work", "[iterator]" ) {
     SECTION( "pre-increment" ) {
         value = *(++it); 
 
-        REQUIRE( value[0] == 1 );
-        REQUIRE( value[1] == 0 );
+        REQUIRE( value[0] == 0 );
+        REQUIRE( value[1] == 1 );
     }
 
     SECTION( "post-increment" ) {
@@ -34,15 +34,15 @@ TEST_CASE( "iterators work", "[iterator]" ) {
 
         value = *it;
 
-        REQUIRE( value[0] == 1 );
-        REQUIRE( value[1] == 0 );
+        REQUIRE( value[0] == 0 );
+        REQUIRE( value[1] == 1 );
     }
 
     SECTION( "increment by n" ) {
         value = *(it+2); 
 
-        REQUIRE( value[0] == 0 );
-        REQUIRE( value[1] == 1 );
+        REQUIRE( value[0] == 1 );
+        REQUIRE( value[1] == 0 );
     }
 
     SECTION( "decrement by n" ) {
@@ -50,8 +50,8 @@ TEST_CASE( "iterators work", "[iterator]" ) {
         it -= 2;
         value = *it; 
 
-        REQUIRE( value[0] == 1 );
-        REQUIRE( value[1] == 0 );
+        REQUIRE( value[0] == 0 );
+        REQUIRE( value[1] == 1 );
     }
 
     SECTION( "looping" ) {
@@ -217,12 +217,6 @@ TEST_CASE( "finite difference") {
     for(int i=0; i<max[0]; ++i) {
         const size_t index = i*(max[1]-min[1]);
         f.write( reinterpret_cast<const char*>(&image[index]), (max[1]-min[1]) );
-
-        for (int j = min[1]; j < max[1]; ++j) {
-            //std::cout << static_cast<unsigned int>(image[index + j]) <<" ";
-            std::cout << values0[index + j] <<" ";
-        }
-        std::cout << std::endl;
     }
 
 

@@ -172,9 +172,9 @@ private:
     int collapse_index_vector(const int_d &vindex) const {
         int index = 0;
         unsigned int multiplier = 1.0;
-        for (size_t i = 0; i<D; ++i) {
-            if (i > 0) {
-                multiplier *= m_size[i-1];
+        for (int i = D-1; i>=0; --i) {
+            if (i != D-1) {
+                multiplier *= m_size[i+1];
             }
             index += multiplier*vindex[i];
         }
@@ -184,7 +184,7 @@ private:
     int_d reassemble_index_vector(const int index) const {
         int_d vindex;
         int i = index;
-        for (size_t d = 0; d<D; ++d) {
+        for (int d = D-1; d>=0; --d) {
             double div = (double)i / m_size[d];
             vindex[d] = std::round((div-std::floor(div)) * m_size[d]);
             i = std::floor(div);
@@ -212,10 +212,10 @@ private:
     }
 
     void increment() {
-        for (size_t i=0; i<D; i++) {
+        for (int i=D-1; i>=0; --i) {
             ++m_index[i];
             if (m_index[i] < m_max[i]) break;
-            if (i != D-1) {
+            if (i != 0) {
                 m_index[i] = m_min[i];
             } else {
                 m_valid = false;
